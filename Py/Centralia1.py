@@ -11,6 +11,27 @@ pixels = neopixel.NeoPixel(board.D18,
                            pixel_order=neopixel.GRBW,
                            auto_write=False)
 
+
+#Process Data
+import pandas as pd
+df = pd.read_csv( 'https://raw.githubusercontent.com/PrattSAVI/Centralie_Visualization/main/Data/temp.csv' )
+df['DepthFeet'] = df['DepthFeet'].replace("-",None) 
+df['DepthFeet'] = df['DepthFeet'].astype(float)
+
+df = df.dropna(subset=['DepthFeet','Temp'])
+df = df[['DepthFeet','Temp']]
+
+df['DepthFeet'] = df['DepthFeet'] - df['DepthFeet'].min()
+df['DepthFeet'] = df['DepthFeet'] * 20 / df['DepthFeet'].max()
+
+df['Temp'] = df['Temp'] - df['Temp'].min()
+df['Temp'] = df['Temp'] * pixelNumber / df['Temp'].max()
+
+print( df['Temp'].min() , df['Temp'].max() ) 
+print( df['DepthFeet'].min() , df['DepthFeet'].max() ) 
+
+
+
 def shutall():
     pixels.fill((0,0,0))
 
@@ -55,29 +76,25 @@ def transitions_Pix(p1,r1,p2,r2,steps):
     for i in range(steps):
         shutall()
         out1 = ColorHill('#ffba08', rrange[i] ,prange[i] )
-        #print( prange[i] , rrange[i] )
-        time.sleep(0.01)
-
 shutall()
-
-max_time = int(45)
-start_time = time.time()
-
 
 
 cols = []
 i=0
-while( (time.time() - start_time) < max_time ):
-    time.sleep(0.15)
+for i,r in df.iterrows():
+    time.sleep(0.01)
 
+    temp = round(r['Temp'])
+    depth = round(r['DepthFeet'])
+
+    print(i,len(df),temp,depth)
     if i > 0:
-        cols.append([random.randint(0,pixelNumber-10),random.randint(5,15)])
+        cols.append([temp,depth])
         transitions_Pix(cols[i-1][0],cols[i-1][1],cols[i][0],cols[i][1],random.randint(40,100))
     else:
         cols.append([random.randint(0,pixelNumber-10),random.randint(5,15)])
         transitions_Pix(0,0,cols[i][0],cols[i][1],random.randint(20,100))
-    i = i + 1 
-    print(time.time() - start_time)
+
 shutall()
 pixels.show()
 
