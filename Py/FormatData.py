@@ -3,7 +3,7 @@
 import os
 import pandas as pd
 
-folder = r'C:\Users\csucuogl\Desktop\gasReadings\gas'
+folder = r'C:\Users\csucuogl\Desktop\WORK\Centralia\DATA\gas'
 
 files = [i for i in os.listdir(folder) if i.split('.')[1] == "xlsx"]
 
@@ -33,18 +33,18 @@ dfg.head()
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-sns.lineplot( data=dfg , x='Date',y='CH4',hue='Bore Hole')
+sns.scatterplot( data=dfg , x='Date',y='CH4')
 plt.show()
 
 
+#%%
+
+dfg.to_csv( os.path.join(folder,"gas.csv"))
+
 # %%
 
-dfg.groupby( by='Bore Hole' , as_index=False).size()
 
-# %%
-
-
-folder = r'C:\Users\csucuogl\Desktop\gasReadings\temp'
+folder = r'C:\Users\csucuogl\Desktop\WORK\Centralia\DATA\temp'
 
 files = [i for i in os.listdir(folder) if i.split('.')[1] == "xlsx"]
 print( files )
@@ -67,7 +67,7 @@ dft['Temp'] = dft['Temp'].replace( '-' , None )
 dft = dft[~pd.isna(dft['Temp'])] 
 dft['Temp'] = dft['Temp'].astype(float)
 # %%
-sns.lineplot( data=dft , x='Date',y='Temp',hue='Bore Hole')
+sns.lineplot( data=dft , x='Date',y='Temp')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 plt.show()
 
@@ -80,6 +80,6 @@ dft.groupby( by='Bore Hole' ).size().sort_values()
 dft[ dft['Bore Hole'] == "N-10"]
 # %%
 
-
+dft.to_csv(os.path.join(folder,"temp.csv"))
 
 # %%
