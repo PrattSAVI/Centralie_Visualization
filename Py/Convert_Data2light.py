@@ -3,11 +3,10 @@ from numpy.lib.function_base import disp
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import time
 from colour import Color
 from seaborn.distributions import distplot
 
-path = r"C:\Users\csucuogl\Downloads\Gas Data Collected_V2.xlsx"
+path = r"C:\Users\csucuogl\Documents\GitHub\Centralie_Visualization\Data\Gas Data Collected_V2.xlsx"
 
 #CO2, CH4 - Upper
 #CO,Particulates - Lower
@@ -15,9 +14,9 @@ path = r"C:\Users\csucuogl\Downloads\Gas Data Collected_V2.xlsx"
 #Records - Perimter
 leds = (60*3) + (16*4)
 
-df = pd.read_excel( path)
-
-cols = 'CO2	CH4	CO	Particulates	Temperature'.split( "\t" )
+df = pd.read_excel( path )
+print( df.columns )
+cols = 'CO2 CH4 CO Particulates Temperature'.split( " " )
 
 for c in cols:
 
